@@ -1,3 +1,3 @@
 <x-hero-section>
-    <h1>helo world</h1>
+    <h1>table pembina</h1>
 </x-hero-section>
