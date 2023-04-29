@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateKesehatanRequest;
 use App\Models\Kesehatan;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class KesehatanController extends Controller
      */
     public function index()
     {
-        return view('kesehatan.index');
+        return view('kesehatan.index', [
+            'kesehatans' => Kesehatan::get()
+        ]);
     }
 
     /**
@@ -20,15 +23,24 @@ class KesehatanController extends Controller
      */
     public function create()
     {
-        //
+        return view('kesehatan.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateKesehatanRequest $request)
     {
-        //
+        $request->validated();
+
+        Kesehatan::create([
+            'nim' => $request->nim,
+            'nama_anggota' => $request->nama_anggota,
+            'kelas' => $request->kelas,
+            'hp' => $request->hp
+        ]);
+
+        return to_route('kesehatan.index');
     }
 
     /**
@@ -44,15 +56,24 @@ class KesehatanController extends Controller
      */
     public function edit(Kesehatan $kesehatan)
     {
-        //
+        return view('kesehatan.edit', compact('kesehatan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kesehatan $kesehatan)
+    public function update(CreateKesehatanRequest $request, Kesehatan $kesehatan)
     {
-        //
+        $request->validated();
+
+        $kesehatan->update([
+            'nim' => $request->nim,
+            'nama_anggota' => $request->nama_anggota,
+            'kelas' => $request->kelas,
+            'hp' => $request->hp
+        ]);
+
+        return to_route('kesehatan.index');
     }
 
     /**
@@ -60,6 +81,8 @@ class KesehatanController extends Controller
      */
     public function destroy(Kesehatan $kesehatan)
     {
-        //
+        $kesehatan->delete();
+
+        return back();
     }
 }

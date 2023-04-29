@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePembinaRequest;
 use App\Models\Pembina;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class PembinaController extends Controller
      */
     public function index()
     {
-        return view('pembina.index');
+        return view('pembina.index',[
+            'pembinas' =>Pembina::get()
+        ]);
     }
 
     /**
@@ -20,15 +23,23 @@ class PembinaController extends Controller
      */
     public function create()
     {
-        //
+        return view('pembina.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreatePembinaRequest $request)
     {
-        //
+        $request->validated();
+
+        Pembina::create([
+            'nip' => $request->nip,
+            'nama' => $request->nama,
+            'hp' => $request->hp
+        ]);
+
+        return to_route('pembina.index');
     }
 
     /**
@@ -44,15 +55,23 @@ class PembinaController extends Controller
      */
     public function edit(Pembina $pembina)
     {
-        //
+        return view('pembina.edit', compact('pembina'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pembina $pembina)
+    public function update(CreatePembinaRequest $request, Pembina $pembina)
     {
-        //
+        $request->validated();
+
+        $pembina->update([
+            'nip' => $request->nip,
+            'nama' => $request->nama,
+            'hp' => $request->hp
+        ]);
+
+        return to_route('pembina.index');
     }
 
     /**
@@ -60,6 +79,8 @@ class PembinaController extends Controller
      */
     public function destroy(Pembina $pembina)
     {
-        //
+        $pembina->delete();
+
+        return back();
     }
 }
